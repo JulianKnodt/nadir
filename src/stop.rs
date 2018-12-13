@@ -3,8 +3,12 @@ pub enum Strategy {
   IterCount(u32),
 }
 
+trait StrategyInstance {
+
+}
+
 impl Strategy {
-   pub fn instance(&self) -> StopStrategyInstance {
+   pub fn instance(&self) -> StrategyInstance {
     unimplemented!();
   }
 }
