@@ -10,7 +10,7 @@ pub(crate) trait StrategyInstance<S> where S: ndarray::Data {
 }
 
 impl Strategy {
-   pub fn instance<S>(&self) -> Arc<StrategyInstance<S>> {
+   pub(crate) fn instance<S: ndarray::Data>(&self) -> Arc<StrategyInstance<S>> {
     unimplemented!();
   }
 }

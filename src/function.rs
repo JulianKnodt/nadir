@@ -8,9 +8,14 @@ pub enum SearchStrategy {
   NewtonIteration,
 }
 
+fn is_column_vector<S:ndarray::Data, D: ndarray::Dimension>(s: ndarray::ArrayBase<S, D>)
+  -> bool {
+  s.ndim() == 1
+}
+
 pub fn find_min<S , D>(f: &Function<S, D>, derivative: &Function<S, D>,
   start: ndarray::ArrayBase<S, D>, search_strat: search::Strategy, stop_strat: stop::Strategy)
-  -> (ndarray::ArrayBase<S, D>, S) where S: ndarray::Data {
+  -> (ndarray::ArrayBase<S, D>, S) where S: ndarray::Data, D: ndarray::Dimension {
   assert!(is_column_vector(start));
   unimplemented!();
   let stop_inst = stop_strat.instance();
