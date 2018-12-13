@@ -1,12 +1,20 @@
+extern crate ndarray;
+
+use std::sync::Arc;
+use crate::function::Function;
+
 pub enum Strategy {
   NewtonIteration,
 }
 
-trait StrategyInstance {
+pub(crate) trait StrategyInstance <S, D> where S: ndarray::Data {
+  fn predict(&self, curr: ndarray::ArrayBase<S, D> , f: &Function<S, D>,
+    derivative: &Function<S, D>) -> ndarray::ArrayBase<S, D>;
 }
 
 impl Strategy {
-   pub fn instance(&self) -> StrategyInstance {
+   pub fn instance<S, D>(&self) -> Arc<StrategyInstance<S, D>>
+   where S: ndarray::Data {
     unimplemented!();
   }
 }
