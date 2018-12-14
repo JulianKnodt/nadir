@@ -8,7 +8,7 @@ pub enum Strategy {
 }
 
 pub(crate) trait StrategyInstance <S, D> where S: ndarray::Data {
-  fn predict(&self, curr: ndarray::ArrayBase<S, D> , f: &Function<S, D>,
+  fn predict(&self, curr: &ndarray::ArrayBase<S, D> , f: &Function<S, D>,
     derivative: &Function<S, D>) -> ndarray::ArrayBase<S, D>;
 }
 

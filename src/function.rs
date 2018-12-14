@@ -2,28 +2,30 @@ extern crate ndarray;
 
 use crate::{search, stop};
 
-pub type Function<S, D> = fn(x: ndarray::ArrayBase<S, D>) -> S;
+pub type Function<S, D> = fn(x: &ndarray::ArrayBase<S, D>) -> S;
 
 pub enum SearchStrategy {
   NewtonIteration,
 }
 
-fn is_column_vector<S:ndarray::Data, D: ndarray::Dimension>(s: ndarray::ArrayBase<S, D>)
+fn is_column_vector<S:ndarray::Data, D: ndarray::Dimension>(s: &ndarray::ArrayBase<S, D>)
   -> bool {
   s.ndim() == 1
 }
 
-pub fn find_min<S , D>(f: &Function<S, D>, derivative: &Function<S, D>,
+pub fn find_min<A, S, D>(f: &Function<S, D>, derivative: &Function<S, D>,
   start: ndarray::ArrayBase<S, D>, search_strat: search::Strategy, stop_strat: stop::Strategy)
-  -> (ndarray::ArrayBase<S, D>, S) where S: ndarray::Data, D: ndarray::Dimension {
-  assert!(is_column_vector(start));
+  -> (ndarray::ArrayBase<S, D>, S)
+  where S: ndarray::Data + Clone + Copy + ndarray::DataClone,
+  D: ndarray::Dimension + Copy + Clone {
+  assert!(is_column_vector(&start));
   let stop_inst = stop_strat.instance();
   let search_inst = search_strat.instance();
-  let mut curr = start;
-  let mut curr_image = f(curr);
-  while !stop_inst.should_stop(curr_image) {
-    curr  = search_inst.predict(curr, f, derivative);
-    curr_image = f(curr);
+  let mut curr = start.clone();
+  let mut curr_image = f(&curr);
+  while !stop_inst.should_stop(&curr_image) {
+    curr  = search_inst.predict(&curr, f, derivative);
+    curr_image = f(&curr);
   }
   (curr, curr_image)
 }

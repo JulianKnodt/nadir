@@ -6,7 +6,7 @@ pub enum Strategy {
 }
 
 pub(crate) trait StrategyInstance<S> where S: ndarray::Data {
-  fn should_stop(&self, image: S) -> bool;
+  fn should_stop(&self, image: &S) -> bool;
 }
 
 impl Strategy {
