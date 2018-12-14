@@ -14,7 +14,7 @@ pub(crate) trait StrategyInstance<S> where S: ndarray::Data {
 
 struct AbsoluteThreshold(f32);
 
-impl trait StrategyInstance<S> where S: ndarray::Data {
+impl StrategyInstance<S> for AbsoluteThreshold where S: ndarray::Data {
   fn should_stop(&self, image: &S) -> bool {
     unimplemented!();
     // upon inpection it appears that ndarray::Data does not have a norm property
