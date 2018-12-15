@@ -11,12 +11,12 @@ pub enum Strategy {
   AbsoluteThreshold(f32),
 }
 
-pub(crate) trait StrategyInstance<S> where S: ndarray::Data {
-  fn should_stop(&self, image: &S) -> bool;
+pub(crate) trait StrategyInstance<A> {
+  fn should_stop(&self, image: &A) -> bool;
 }
 
 impl Strategy {
-  pub(crate) fn instance<S: ndarray::Data>(&self) -> Arc<StrategyInstance<S>> {
+  pub(crate) fn instance<A>(&self) -> Arc<StrategyInstance<A>> {
     match self {
       _ => unimplemented!(),
     }
