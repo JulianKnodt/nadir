@@ -1,7 +1,10 @@
 use std::sync::Arc;
 
 pub enum Strategy {
+  /// if the difference between two iterations is minimal it stops
   Threshold(f32),
+
+  /// Runs the algorithm a constant number of times
   IterCount(u32),
   // only stop once threshold is below a certain absolute value
   // dangerous if the function is never below that value.
@@ -12,19 +15,9 @@ pub(crate) trait StrategyInstance<S> where S: ndarray::Data {
   fn should_stop(&self, image: &S) -> bool;
 }
 
-struct AbsoluteThreshold(f32);
-
-impl <S> StrategyInstance<S> for AbsoluteThreshold where S: ndarray::Data {
-  fn should_stop(&self, image: &S) -> bool {
-    unimplemented!();
-    // upon inpection it appears that ndarray::Data does not have a norm property
-  }
-}
-
 impl Strategy {
   pub(crate) fn instance<S: ndarray::Data>(&self) -> Arc<StrategyInstance<S>> {
     match self {
-      Strategy::AbsoluteThreshold(i) => Arc::new(AbsoluteThreshold(*i)),
       _ => unimplemented!(),
     }
   }

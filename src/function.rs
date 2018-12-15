@@ -2,17 +2,18 @@ extern crate ndarray;
 
 use crate::{search, stop};
 
+/// Type alias of functions that we are expecting.
 pub type Function<S, D> = fn(x: &ndarray::ArrayBase<S, D>) -> S;
 
-pub enum SearchStrategy {
-  NewtonIteration,
-}
-
+// tests whether a function is a column vector
+// just to ensure that we get what we expect.
 fn is_column_vector<S:ndarray::Data, D: ndarray::Dimension>(s: &ndarray::ArrayBase<S, D>)
   -> bool {
   s.ndim() == 1
 }
 
+/// Finds the global minimum of some function f and it's derivative, given starting position
+/// "start", and using search and stop strategies as provided.
 pub fn find_min<A, S, D>(f: &Function<S, D>, derivative: &Function<S, D>,
   start: ndarray::ArrayBase<S, D>, search_strat: search::Strategy, stop_strat: stop::Strategy)
   -> (ndarray::ArrayBase<S, D>, S)
