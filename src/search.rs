@@ -49,10 +49,10 @@ impl <A, S, D> StrategyInstance<A, S, D> for BFGS<A, S, D>
     // good, but wikipedia lists an efficient way to perform the inverse, which should be
     // exploited. TODO
     let curr_grad = grad(f, &curr);
-    let direction = unimplemented!();
-    let step_size = golden_section_search(f, &curr, direction);
-    let step = direction * step_size;
-    let next = curr + step;
+    let direction: ndarray::ArrayBase<S, D> = unimplemented!();
+    let step_size = golden_section_search(f, &curr, &direction);
+    let step = step_size * direction;
+    let next = curr + &step;
     let update = next - curr;
 
     let next_hessian =
