@@ -14,8 +14,7 @@ const phi : f64 = (5.0f64.sqrt() + 1.0)/2.0;
 pub fn golden_section_search<A, S>(
   f: &Function<A,S>,
   start: &ndarray::ArrayBase<S,Ix1>,
-  direction: &ndarray::ArrayBase<S,Ix1>,
-  tolerance: A) -> A
+  direction: &ndarray::ArrayBase<S,Ix1>) -> A
   where
   A: Clone + PartialOrd + Div<f64, Output = A> + Sub<A, Output=A>,
   S: ndarray::Data<Elem = A> {

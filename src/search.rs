@@ -2,8 +2,7 @@ extern crate ndarray;
 
 use std::ops::{Mul, Add, Sub, Div};
 use std::sync::Arc;
-use crate::function::Function;
-use crate::grad::grad;
+use crate::function::{Function, FunctionGradient};
 use crate::line_search::{golden_section_search};
 
 use self::ndarray::{Ix1, Ix2};
@@ -23,19 +22,20 @@ struct BFGS<A, S>
 
 impl <A, S> StrategyInstance<A, S> for BFGS<A, S>
   where
-  A: Clone + Mul<A, Output=A> + Add<A, Output=A> + Sub<A, Output=A> + Div<A, Output=A>,
+  A: Clone + Mul<A, Output=A> + Add<A, Output=A> + Sub<A, Output=A> + Div<A, Output=A> +
+  Div<f64, Output=A> + PartialOrd,
   S: ndarray::Data<Elem = A> {
   fn predict(&mut self,
     curr: &ndarray::ArrayBase<S,Ix1>,
     f: &Function<A,S>,
-    derivative: &Function<A,S>
+    grad: &FunctionGradient<A,S>
   ) -> ndarray::ArrayBase<ndarray::OwnedRepr<A>, Ix1> {
     let hess_approx = self.hessian_approx;
     // B_k p_k = - grad f(x);
     // I would imagine that in most cases converting this into an LU system and solving would be
     // good, but wikipedia lists an efficient way to perform the inverse, which should be
     // exploited. TODO
-    let curr_grad = grad(f, &curr);
+    let curr_grad = grad(&curr);
     let direction = unimplemented!();
     let step_size = golden_section_search(f, &curr, &direction);
     let step = direction * step_size;
@@ -58,7 +58,7 @@ pub(crate) trait StrategyInstance <A, S> where S: ndarray::Data<Elem=A> {
   fn predict(&mut self,
     curr: &ndarray::ArrayBase<S, Ix1>,
     f: &Function<A,S>,
-    derivative: &Function<A,S>
+    derivative: &FunctionGradient<A,S>
   ) -> ndarray::ArrayBase<ndarray::OwnedRepr<A>, Ix1>
   where S: ndarray::Data<Elem=A>;
 }
