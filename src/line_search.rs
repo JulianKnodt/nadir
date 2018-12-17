@@ -11,13 +11,14 @@ const phi : f64 = (5.0f64.sqrt() + 1.0)/2.0;
 /// minimizes f as a function of t in
 /// f(start + t*direction)
 /// reference: https://en.wikipedia.org/wiki/Golden-section_search
-pub fn golden_section_search<A, S>(
+pub fn golden_section_search<A, S, S2>(
   f: &Function<A,S>,
   start: &ndarray::ArrayBase<S,Ix1>,
-  direction: &ndarray::ArrayBase<S,Ix1>) -> A
+  direction: &ndarray::ArrayBase<S2,Ix1>) -> A
   where
   A: Clone + PartialOrd + Div<f64, Output = A> + Sub<A, Output=A>,
-  S: ndarray::Data<Elem = A> {
+  S: ndarray::Data<Elem = A>,
+  S2: ndarray::Data<Elem = A> {
 
   // Realized this was WRONG but its close to being right, TODO
   unimplemented!();
