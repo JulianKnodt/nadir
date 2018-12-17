@@ -23,8 +23,8 @@ pub fn find_min<A,S>(
   where
   A: Clone,
   S: ndarray::Data<Elem=A> + Clone + ndarray::DataClone {
-  let stop_inst = stop_strat.instance();
-  let search_inst = search_strat.instance();
+  let mut stop_inst = stop_strat.instance();
+  let mut search_inst = search_strat.instance();
   let mut curr = start.to_owned();
   let mut curr_image: A = f(&curr);
   while !stop_inst.should_stop(&curr_image) {

@@ -29,7 +29,6 @@ impl <A, S> StrategyInstance<A, S> for BFGS<A>
     f: &Function<A,S>,
     grad: &FunctionGradient<A,S>
   ) -> ndarray::Array<A,Ix1> {
-    let hess_approx = self.hessian_approx;
     // B_k p_k = - grad f(x);
     // I would imagine that in most cases converting this into an LU system and solving would be
     // good, but wikipedia lists an efficient way to perform the inverse, which should be
@@ -39,14 +38,15 @@ impl <A, S> StrategyInstance<A, S> for BFGS<A>
     let step_size = golden_section_search(f, curr, &direction);
     let step = direction * step_size;
     let next = curr + &step;
-    let update = next - curr;
+    let update = &next - curr;
     let update_t = update.t().to_owned();
     let step_t = step.t().to_owned();
 
+    let hess_approx = &self.hessian_approx;
     let next_hessian =
       hess_approx
-      + (update * update_t/(update_t * step))
-      - (hess_approx * step * step_t * hess_approx)/(step_t * hess_approx * step);
+      + (update * &update_t/(&update_t * step))
+      - (hess_approx * &step * &step_t * hess_approx)/(&step_t * hess_approx * &step);
     self.hessian_approx = next_hessian;
 
     next
