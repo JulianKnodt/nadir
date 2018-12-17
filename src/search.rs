@@ -36,7 +36,7 @@ impl <A, S> StrategyInstance<A, S> for BFGS<A>
     let curr_grad = grad(curr);
     let direction:ndarray::Array<A,Ix1> = unimplemented!();
     let step_size = golden_section_search(f, curr, &direction);
-    let step = direction * step_size;
+    let step: ndarray::Array<A,Ix1> = direction * step_size;
     let next = curr + &step;
     let update = &next - curr;
     let update_t = update.t().to_owned();
@@ -44,8 +44,8 @@ impl <A, S> StrategyInstance<A, S> for BFGS<A>
 
     let hess_approx = &self.hessian_approx;
     let next_hessian =
-      hess_approx
-      + (update * &update_t/(&update_t * step))
+      // the statement below is not calculating a higher dimensional array...
+      hess_approx + (update * &update_t)/(update_t * step)
       - (hess_approx * &step * &step_t * hess_approx)/(&step_t * hess_approx * &step);
     self.hessian_approx = next_hessian;
 
