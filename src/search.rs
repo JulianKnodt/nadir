@@ -43,9 +43,7 @@ impl <A, S> StrategyInstance<A, S> for BFGS<A>
     let step_t = step.t().to_owned();
 
     let hess_approx = &self.hessian_approx;
-    let next_hessian =
-      // the statement below is not calculating a higher dimensional array...
-      hess_approx + (update * &update_t)/(update_t * step)
+    let next_hessian = hess_approx + (update.dot(&update_t))/(update_t * &step)
       - (hess_approx * &step * &step_t * hess_approx)/(&step_t * hess_approx * &step);
     self.hessian_approx = next_hessian;
 
