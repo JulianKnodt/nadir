@@ -5,3 +5,4 @@ authors = ["julianknodt <julianknodt@gmail.com>", "Geoffrey Mon <geofbot@gmail.c
 
 [dependencies]
 ndarray = "0.12.1"
+num-traits = "0.2.6"
